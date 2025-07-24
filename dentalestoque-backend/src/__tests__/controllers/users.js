@@ -52,3 +52,15 @@ test('should return 500 if error fetching users', async() => {
     });
 });
 
+test('should delete user', async() => {
+    const userId = faker.internet.username();
+
+    const dataAccess = {
+        deleteUser: jest.fn(async() => null)
+    };
+
+    await (new UserController(dataAccess)).deleteUser(userId);
+
+    expect(dataAccess.deleteUser.mock.calls[0]).toEqual([userId]);
+});
+
