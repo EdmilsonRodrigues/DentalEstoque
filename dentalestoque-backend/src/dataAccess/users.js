@@ -1,12 +1,15 @@
-import { Mongo } from "../database/mongo.js";
 import { ObjectId } from "mongodb";
 import crypto from 'crypto';
 
 const collectionName = 'users';
 
 export default class UsersDataAccess {
+    constructor(mongoConnection) {
+        this.mongoConnection = mongoConnection;
+    }
+    
     async getUsers() {
-        const result = await Mongo.db 
+        const result = await this.mongoConnection.db 
               .collection(collectionName)
               .find({ })
               .toArray();
@@ -15,7 +18,7 @@ export default class UsersDataAccess {
     }
 
     async deleteUser(userId) {
-        const result = await Mongo.db
+        const result = await this.mongoConnection.db
               .collection(collectionName)
               .findOneAndDelete({ _id: new ObjectId(userId) });
 
@@ -26,31 +29,18 @@ export default class UsersDataAccess {
         if(userData.password) {
             const salt = crypto.randomBytes(16);
 
-            return crypto.pbkdf2(userData.password, salt, 310000, 16, 'sha256', async (err, hashedPassword) => {
-                if(err) {
-                    throw new Error('Erro durante a criptografia da senha');
-                }
-                
-                userData = { ...userData, password: hashedPassword, salt };
+            const hashedPassword = crypto.pbkdf2Sync(userData.password, salt, 310000, 16, 'sha256');
 
-                const result = await Mongo.db
-                      .collection(collectionName)
-                      .findOneAndUpdate(
-                          { _id: new ObjectId(userId) },
-                          { $set: userData }
-                      );
-
-                return result;
-            });
-        } else {
-            const result = await Mongo.db
-                  .collection(collectionName)
-                  .findOneAndUpdate(
-                      { _id: new ObjectId(userId) },
-                      { $set: userData }
-                  );
-
-            return result;
+            userData = { ...userData, password: hashedPassword.toString('hex'), salt };
         }  
+
+        const result = await this.mongoConnection.db
+              .collection(collectionName)
+              .findOneAndUpdate(
+                  { _id: new ObjectId(userId) },
+                  { $set: userData }
+              );
+
+        return result;
     };
 };

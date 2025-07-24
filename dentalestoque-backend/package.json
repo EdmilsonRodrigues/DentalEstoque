@@ -1,29 +1,33 @@
 {
-  "name": "dentalestoque-backend",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "dev": "nodemon src/index.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "description": "",
-  "devDependencies": {
-    "@eslint/js": "^9.31.0",
-    "eslint": "^9.31.0",
-    "globals": "^16.3.0",
-    "nodemon": "^3.1.10"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "crypto": "^1.0.1",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongodb": "^6.16.0",
-    "passport": "^0.7.0",
-    "passport-local": "^1.0.0"
-  }
+    "name": "dentalestoque-backend",
+    "version": "1.0.0",
+    "main": "index.js",
+    "scripts": {
+        "dev": "nodemon src/index.js",
+        "test": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-vm-modules\" npx jest",
+        "lint": "npx eslint",
+        "format": "npx eslint --fix"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "description": "",
+    "devDependencies": {
+        "@eslint/js": "^9.31.0",
+        "@faker-js/faker": "^9.9.0",
+        "eslint": "^9.31.0",
+        "globals": "^16.3.0",
+        "nodemon": "^3.1.10"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "crypto": "^1.0.1",
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0",
+        "jsonwebtoken": "^9.0.2",
+        "mongodb": "^6.16.0",
+        "passport": "^0.7.0",
+        "passport-local": "^1.0.0"
+    }
 }

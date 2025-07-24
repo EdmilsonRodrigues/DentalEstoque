@@ -1,27 +1,31 @@
 import express from 'express';
+
 import UsersControllers from '../controllers/users.js';
+import UsersDataAccess from '../dataAccess/users.js';
 
-const usersRouter = express.Router();
+function getUsersRouter(mongoConnection) {
+    const usersRouter = express.Router();
 
-const usersControllers = new UsersControllers();
+    const usersControllers = new UsersControllers(new UsersDataAccess(mongoConnection));
 
-usersRouter.get('/', async(req, res) => {
-    const { success, statusCode, body } = await usersControllers.getUsers();
+    usersRouter.get('/', async(req, res) => {
+        const { success, statusCode, body } = await usersControllers.getUsers();
 
-    res.status(statusCode).send({ success, statusCode, body });
-});
+        res.status(statusCode).send({ success, statusCode, body });
+    });
 
-usersRouter.delete('/:id', async (req, res) => {
-    // console.log(req.params)
-    const { success, statusCode, body } = await usersControllers.deleteUser(req.params.id);
+    usersRouter.delete('/me', async (req, res) => {
+        const { success, statusCode, body } = await usersControllers.deleteUser(req.params.id);
 
-    res.status(statusCode).send({ success, statusCode, body });
-});
+        res.status(statusCode).send({ success, statusCode, body });
+    });
 
-usersRouter.put('/:id', async (req, res) => {
-    const { success, statusCode, body } = await usersControllers.updateUser(req.params.id, req.body);
+    usersRouter.put('/me', async (req, res) => {
+        const { success, statusCode, body } = await usersControllers.updateUser(req.params.id, req.body);
 
-    res.status(statusCode).send({ success, statusCode, body });
-});
+        res.status(statusCode).send({ success, statusCode, body });
+    });
 
-export default usersRouter;
+    return usersRouter;
+}
+export default getUsersRouter;

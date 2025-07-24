@@ -14,4 +14,17 @@ export default defineConfig([
         },
     },
     { files: ["**/*.{js,mjs,cjs}"], languageOptions: { globals: globals.browser } },
+    
+    {
+        files: ['**/*.js'],
+        languageOptions: {
+            globals: {
+                ...globals.jest,
+            },
+        },
+        rules: {
+            'no-unused-vars': 'warn',
+            'no-undef': 'warn',
+        },
+    },
 ]);

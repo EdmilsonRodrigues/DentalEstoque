@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-export const Mongo = {
+export const mongoConnection = {
     async connect({mongoConnectionString, mongoDbName}) {
         try {
             const client = new MongoClient(mongoConnectionString);
@@ -11,11 +11,9 @@ export const Mongo = {
             this.client = client;
             this.db = db;
 
-            return 'Conectado ao mongo';
-
         } catch(error) {
-            return { text: 'Erro durante a conexão do mongo', error};
-        }
-        
+            console.log({ text: 'Erro durante a conexão do mongo', error});
+            throw error;
+        }        
     }
 };
