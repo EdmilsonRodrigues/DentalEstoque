@@ -9,7 +9,7 @@ function generateRandomUser() {
     };
 }
 
-test('should return Users in specified format', async() => {
+test('should return users', async() => {
     const MIN_USERS = 0;
     const MAX_USERS = 100;
 
@@ -24,12 +24,31 @@ test('should return Users in specified format', async() => {
         getUsers: jest.fn().mockImplementation(async() => users)
     };
 
-    result = await (new UserController(dataAccess)).getUsers();
-    console.log(result);
-
-    expect(result).toStrictEqual({
+    expect(
+        await (new UserController(dataAccess)).getUsers()
+    ).toStrictEqual({
         statusCode: 200,
         success: true,
         body: users
     });
 });
+
+test('should return 500 if error fetching users', async() => {
+    const errorMessage = "An Error Happened";
+    const MockError = new Error(errorMessage);
+
+    const dataAccess = {
+        getUsers: jest.fn().mockImplementation(async() => {
+            throw MockError;
+        })
+    };
+
+    expect(
+        await (new UserController(dataAccess)).getUsers()
+    ).toStrictEqual({
+        statusCode: 500,
+        success: false,
+        body: MockError.toString()
+    });
+});
+
